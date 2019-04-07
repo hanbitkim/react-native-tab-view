@@ -352,8 +352,14 @@ export default class TabBar<T: Route> extends React.Component<Props<T>, State> {
                 pressColor={pressColor}
                 pressOpacity={pressOpacity}
                 onPress={() => {
-                  onTabPress && onTabPress({ route });
-                  this.props.jumpTo(route.key);
+                  if (onTabPress) {
+                    onTabPress({ route })
+                      .then(() => this.props.jumpTo(route.key))
+                      .catch(() => {});
+                  }
+                  else {
+                    this.props.jumpTo(route.key);
+                  }
                 }}
                 onLongPress={() => onTabLongPress && onTabLongPress({ route })}
                 labelStyle={labelStyle}
